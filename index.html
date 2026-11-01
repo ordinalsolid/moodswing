@@ -74,7 +74,7 @@
 
     .wrapper {
       width: 100%;
-      max-width: 1080px;
+      max-width: 1200px; /* Expanded max-width for widescreen legibility */
       margin: 0 auto;
       padding: 2rem 1.5rem;
       display: flex;
@@ -86,14 +86,14 @@
       ==========================================================================
       BLOCK 4: HEADER & METADATA SECTION
       --------------------------------------------------------------------------
-      Matches header structure from plan.jpg with title on left and student info
+      Matches header structure with title on left and student info
       separated by a thin vertical divider on right.
       ==========================================================================
     */
     header {
       width: 100%;
       border-bottom: 1.5px solid var(--border-color);
-      padding-bottom: 1.25rem;
+      padding-bottom: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -121,10 +121,11 @@
 
     /* Small yellow square accent icon */
     .accent-square {
-      width: 10px;
+      width: 100%;
+      max-width: 10px;
       height: 10px;
       background-color: var(--accent-color);
-      border: 1px solid var(--border-color);
+      border: px solid var(--border-color);
       display: inline-block;
     }
 
@@ -169,14 +170,16 @@
 
     /* 
       ==========================================================================
-      BLOCK 5: RADIAL EMOTE WHEEL STAGE
+      BLOCK 5: FLUID RADIAL EMOTE WHEEL STAGE (SCALES WITH SCREEN WIDTH)
       --------------------------------------------------------------------------
-      Positions 8 square GIF slots radially around a 240px center display square.
-      Active slot gets a 3px border in #FFCE2E (Yellow).
+      Uses Container Query Units (cqi) so the wheel, central hub, and outer slots
+      scale smoothly relative to the container width.
       ==========================================================================
     */
     .wheel-stage {
       width: 100%;
+      container-type: inline-size; /* Enables cqi unit calculations */
+      container-name: wheelContainer;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -186,21 +189,29 @@
 
     .wheel-container {
       position: relative;
-      width: 500px;
-      height: 500px;
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 1.4 / 1; /* Maintains consistent radial ratio */
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* Central Big Square Display (Full Bleed Active GIF) */
+    /* Central Big Square Display (Positioned IN FRONT with z-index: 5) */
     .center-display-box {
       position: absolute;
-      width: 240px;
-      height: 240px;
+      top: 50%;
+      left: 50%;
+      width: 29cqi;
+      height: 29cqi;
+      max-width: 310px;
+      max-height: 310px;
+      min-width: 150px;
+      min-height: 150px;
+      transform: translate(-50%, -50%);
       background-color: var(--card-bg);
       border: px solid var(--border-color);
-      z-index: 5;
+      z-index: 5; /* Sits in front of surrounding slots */
       overflow: hidden;
       display: flex;
       justify-content: center;
@@ -214,18 +225,24 @@
       display: block;
     }
 
-    /* 8 Pure GIF Square Slots (No text/labels inside) */
+    /* 8 Pure GIF Square Slots (Fluidly sized using cqi) */
     .emote-slot {
       position: absolute;
-      width: 105px;
-      height: 105px;
+      top: 50%;
+      left: 50%;
+      width: 13.5cqi;
+      height: 13.5cqi;
+      max-width: 140px;
+      max-height: 140px;
+      min-width: 70px;
+      min-height: 70px;
       background-color: var(--card-bg);
       border: px solid var(--border-color);
       cursor: pointer;
       overflow: hidden;
       padding: 0;
       z-index: 2;
-      transition: border-color 0.15s ease, transform 0.15s ease;
+      transition: border-color 0.15s ease, transform 0.15s ease, outline 0.15s ease;
     }
 
     .emote-slot img {
@@ -240,18 +257,28 @@
     .emote-slot:hover,
     .emote-slot.active {
       border: 3.5px solid var(--accent-color);
-      z-index: 10;
+      z-index: 10; /* Active/Hovered slot pops above center frame */
     }
 
-    /* Precise Octagonal Positioning around Center Hub */
-    .slot-1 { transform: translate(0px, -180px); }
-    .slot-2 { transform: translate(128px, -128px); }
-    .slot-3 { transform: translate(180px, 0px); }
-    .slot-4 { transform: translate(128px, 128px); }
-    .slot-5 { transform: translate(0px, 180px); }
-    .slot-6 { transform: translate(-128px, 128px); }
-    .slot-7 { transform: translate(-180px, 0px); }
-    .slot-8 { transform: translate(-128px, -128px); }
+    /* Fluid Octagonal Radial Offsets (Radius ~ 22.5cqi) */
+    .slot-1 { transform: translate(-50%, -50%) translate(0cqi, -22.5cqi); }
+    .slot-2 { transform: translate(-50%, -50%) translate(15.9cqi, -15.9cqi); }
+    .slot-3 { transform: translate(-50%, -50%) translate(22.5cqi, 0cqi); }
+    .slot-4 { transform: translate(-50%, -50%) translate(15.9cqi, 15.9cqi); }
+    .slot-5 { transform: translate(-50%, -50%) translate(0cqi, 22.5cqi); }
+    .slot-6 { transform: translate(-50%, -50%) translate(-15.9cqi, 15.9cqi); }
+    .slot-7 { transform: translate(-50%, -50%) translate(-22.5cqi, 0cqi); }
+    .slot-8 { transform: translate(-50%, -50%) translate(-15.9cqi, -15.9cqi); }
+
+    /* Hover animation scale while maintaining relative position */
+    .slot-1:hover, .slot-1.active { transform: translate(-50%, -50%) translate(0cqi, -22.5cqi) scale(1.06); }
+    .slot-2:hover, .slot-2.active { transform: translate(-50%, -50%) translate(15.9cqi, -15.9cqi) scale(1.06); }
+    .slot-3:hover, .slot-3.active { transform: translate(-50%, -50%) translate(22.5cqi, 0cqi) scale(1.06); }
+    .slot-4:hover, .slot-4.active { transform: translate(-50%, -50%) translate(15.9cqi, 15.9cqi) scale(1.06); }
+    .slot-5:hover, .slot-5.active { transform: translate(-50%, -50%) translate(0cqi, 22.5cqi) scale(1.06); }
+    .slot-6:hover, .slot-6.active { transform: translate(-50%, -50%) translate(-15.9cqi, 15.9cqi) scale(1.06); }
+    .slot-7:hover, .slot-7.active { transform: translate(-50%, -50%) translate(-22.5cqi, 0cqi) scale(1.06); }
+    .slot-8:hover, .slot-8.active { transform: translate(-50%, -50%) translate(-15.9cqi, -15.9cqi) scale(1.06); }
 
     /* 
       ==========================================================================
@@ -271,7 +298,7 @@
 
     .info-box {
       background-color: var(--card-bg);
-      border: 1.5px solid var(--border-color);
+      border: px solid var(--border-color);
       padding: 1.75rem;
       display: flex;
       flex-direction: column;
@@ -401,11 +428,6 @@
       .info-grid {
         grid-template-columns: 1fr;
       }
-
-      .wheel-container {
-        transform: scale(0.72);
-        margin: -50px 0;
-      }
     }
   </style>
 </head>
@@ -425,14 +447,14 @@
       <div class="header-left">
         <div class="header-tag">
           <span class="accent-square"></span>
-          UNDERGRADUATE COMMUNCIATION DESIGN
+          UNDERGRADUATE COMMUNICATION DESIGN
         </div>
         <!-- EDIT HERE: PROJECT TITLE -->
         <h1>THE MOOD SWING / EMOTE STUDY</h1>
       </div>
 
       <div class="header-right">
-        <span class="label">ARTIST / STUDENT</span>
+        <span class="label"><span class="accent-square"></span> ARTIST / STUDENT</span>
         <!-- EDIT HERE: STUDENT NAME -->
         <span class="artist-name">YOUR NAME HERE</span>
         <!-- EDIT HERE: COURSE NAME -->
@@ -442,7 +464,7 @@
 
     <!-- 
       ==========================================================================
-      SECTION 2: RADIAL EMOTE WHEEL STAGE
+      SECTION 2: FLUID RADIAL EMOTE WHEEL STAGE
       --------------------------------------------------------------------------
       Center stage containing the large display square and 8 outer GIF slots.
       ==========================================================================
@@ -450,7 +472,7 @@
     <section class="wheel-stage">
       <div class="wheel-container">
         
-        <!-- Center Big Display Box (Shows active full-size GIF) -->
+        <!-- Center Big Display Box (Shows active full-size GIF, z-index: 5) -->
         <div class="center-display-box">
           <img id="mainDisplay" src="emotion01.gif" alt="Center Emote GIF" onerror="handleMainError(this)">
         </div>
@@ -504,7 +526,7 @@
       ==========================================================================
       SECTION 3: INFO GRID (PROJECT STATEMENT & FILE SPECIFICATIONS)
       --------------------------------------------------------------------------
-      Two bordered panels matching plan.jpg.
+      Two bordered panels matching layout specification.
       ==========================================================================
     -->
     <main class="info-grid">
@@ -513,7 +535,7 @@
       <div class="info-box">
         <div>
           <div class="box-header">
-            <span class="slash">//</span> 01. PROJECT STATEMENT
+           <span class="accent-square"></span> PROJECT STATEMENT
           </div>
           <!-- EDIT HERE: STUDENT PROJECT STATEMENT PARAGRAPH -->
           <p class="statement-text">
@@ -523,7 +545,7 @@
         <div>
           <hr class="box-divider">
           <div class="box-footer-text">
-            STATUS: ACTIVE SUBMISSION
+            STATUS: ACTIVE
           </div>
         </div>
       </div>
@@ -532,7 +554,7 @@
       <div class="info-box">
         <div>
           <div class="box-header">
-            <span class="slash">//</span> 02. FILE SPECIFICATIONS
+            <span class="accent-square"></span> FILE SPECIFICATIONS
           </div>
           <table class="specs-table">
             <tr>
@@ -572,15 +594,16 @@
 
   <!-- 
     ==========================================================================
-    SECTION 4: FOOTER
+    SECTION 4: FOOTER -YOU CAN CHANGE THIS TEXT IN WHITE IF YOU WANT
     --------------------------------------------------------------------------
     ==========================================================================
   -->
   <footer>
-    EMOTE WHEEL TEMPLATE &bull; HTML/CSS/JS ARCHIVE
+    EMOTE WHEEL TEMPLATE &bull; HTML/CSS/JS &bull; BROOKLYN NY
   </footer>
 
-  <!-- 
+
+  <!-- DONT CHANGE ANY OF THIS!!!!
     ==========================================================================
     SECTION 5: INTERACTION SCRIPT
     --------------------------------------------------------------------------
