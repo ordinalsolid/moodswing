@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eight Emotions / Loop Study — Student Template</title>
+
+  <!-- 
+    ==========================================================================
+    BLOCK 1: FONTS & EXTERNAL STYLES
+    --------------------------------------------------------------------------
+    Imports Inter (modern sans-serif) and Space Mono (monospace). 
+    Students can switch fonts in the CSS :root variables below.
+    ==========================================================================
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* 
+      ==========================================================================
+      BLOCK 2: CUSTOMIZABLE CSS VARIABLES (:root)
+      --------------------------------------------------------------------------
+      INSTRUCTIONS FOR STUDENTS:
+      You can change colors, fonts, and borders across your site by modifying 
+      these variables. 
+      ==========================================================================
+    */
+    :root {
+      /* Palette Settings */
+      --bg-color: #F4F4F0;        /* Main off-white background */
+      --card-bg: #FFFFFF;         /* White panel surface background */
+      --text-main: #111111;       /* Primary text color */
+      --text-muted: #666666;      /* Secondary label color */
+      --border-color: #111111;    /* Solid line border color */
+      
+      /* Primary Accent Color (Yellow as specified) */
+      --accent-color: #FFCE2E;
+
+      /* Font Family Settings */
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    /* 
+      ==========================================================================
+      BLOCK 3: CORE RESET & FLAT STYLES (Zero Drop Shadows)
+      --------------------------------------------------------------------------
+      Removes default browser padding/margins and strictly disables drop shadows 
+      to enforce high-contrast Swiss editorial design rules.
+      ==========================================================================
+    */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-shadow: none !important;  /* Hard rule: no drop shadows */
+      text-shadow: none !important;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    /* 
+      ==========================================================================
+      BLOCK 4: HEADER & METADATA SECTION
+      --------------------------------------------------------------------------
+      Matches header structure from plan.jpg with title on left and student info
+      separated by a thin vertical divider on right.
+      ==========================================================================
+    */
+    header {
+      width: 100%;
+      border-bottom: 1.5px solid var(--border-color);
+      padding-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .header-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Small yellow square accent icon */
+    .accent-square {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent-color);
+      border: 1px solid var(--border-color);
+      display: inline-block;
+    }
+
+    .header-left h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      padding-left: 1.5rem;
+      border-left: 1px solid var(--border-color);
+    }
+
+    .header-right .label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .header-right .artist-name {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .header-right .course-info {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* 
+      ==========================================================================
+      BLOCK 5: RADIAL EMOTE WHEEL STAGE
+      --------------------------------------------------------------------------
+      Positions 8 square GIF slots radially around a 240px center display square.
+      Active slot gets a 3px border in #FFCE2E (Yellow).
+      ==========================================================================
+    */
+    .wheel-stage {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem 0;
+      position: relative;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Central Big Square Display (Full Bleed Active GIF) */
+    .center-display-box {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      background-color: var(--card-bg);
+      border: 2px solid var(--border-color);
+      z-index: 2;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .center-display-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 8 Pure GIF Square Slots (No text/labels inside) */
+    .emote-slot {
+      position: absolute;
+      width: 105px;
+      height: 105px;
+      background-color: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      cursor: pointer;
+      overflow: hidden;
+      padding: 0;
+      z-index: 3;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .emote-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* Active State & Hover Effect: Yellow #FFCE2E Border Highlight */
+    .emote-slot:hover,
+    .emote-slot.active {
+      border: 3.5px solid var(--accent-color);
+      z-index: 10;
+    }
+
+    /* Precise Octagonal Positioning around Center Hub */
+    .slot-1 { transform: translate(0px, -180px); }
+    .slot-2 { transform: translate(128px, -128px); }
+    .slot-3 { transform: translate(180px, 0px); }
+    .slot-4 { transform: translate(128px, 128px); }
+    .slot-5 { transform: translate(0px, 180px); }
+    .slot-6 { transform: translate(-128px, 128px); }
+    .slot-7 { transform: translate(-180px, 0px); }
+    .slot-8 { transform: translate(-128px, -128px); }
+
+    /* 
+      ==========================================================================
+      BLOCK 6: INFO GRID & SPECIFICATIONS SECTION
+      --------------------------------------------------------------------------
+      Two-column grid layout containing Project Statement & Technical File Specs.
+      ==========================================================================
+    */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      width: 100%;
+      border-top: 1.5px solid var(--border-color);
+      padding-top: 2rem;
+    }
+
+    .info-box {
+      background-color: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .box-header {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .box-header .slash {
+      color: var(--border-color);
+      font-weight: 900;
+    }
+
+    .statement-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .box-divider {
+      width: 100%;
+      border: none;
+      border-top: 1px solid var(--border-color);
+      margin: 1.5rem 0 1rem 0;
+    }
+
+    .box-footer-text {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Specs Table */
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .specs-table tr {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .specs-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .specs-table td {
+      padding: 0.5rem 0;
+    }
+
+    .specs-table td.label {
+      color: var(--text-muted);
+    }
+
+    .specs-table td.value {
+      text-align: right;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Local File Tester Button */
+    .test-button-wrapper {
+      margin-top: 1rem;
+    }
+
+    .file-input-btn {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      background-color: var(--accent-color);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .file-input-btn:hover {
+      background-color: #f0c020;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    /* 
+      ==========================================================================
+      BLOCK 7: FOOTER
+      --------------------------------------------------------------------------
+      Bottom archive tagline.
+      ==========================================================================
+    */
+    footer {
+      width: 100%;
+      border-top: 1px solid var(--border-color);
+      padding: 1.25rem 0;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wheel-container {
+        transform: scale(0.72);
+        margin: -50px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MAIN LAYOUT WRAPPER -->
+  <div class="wrapper">
+    
+    <!-- 
+      ==========================================================================
+      SECTION 1: HEADER
+      --------------------------------------------------------------------------
+      Edit project title, student name, and course details here.
+      ==========================================================================
+    -->
+    <header>
+      <div class="header-left">
+        <div class="header-tag">
+          <span class="accent-square"></span>
+          UNDERGRADUATE COMMUNCIATION DESIGN
+        </div>
+        <!-- EDIT HERE: PROJECT TITLE -->
+        <h1>EIGHT EMOTIONS / LOOP STUDY</h1>
+      </div>
+
+      <div class="header-right">
+        <span class="label">ARTIST / STUDENT</span>
+        <!-- EDIT HERE: STUDENT NAME -->
+        <span class="artist-name">YOUR NAME HERE</span>
+        <!-- EDIT HERE: COURSE NAME -->
+        <span class="course-info">DYNAMIC IMAGER &bull; SPRING 2027</span>
+      </div>
+    </header>
+
+    <!-- 
+      ==========================================================================
+      SECTION 2: RADIAL EMOTE WHEEL STAGE
+      --------------------------------------------------------------------------
+      Center stage containing the large display square and 8 outer GIF slots.
+      ==========================================================================
+    -->
+    <section class="wheel-stage">
+      <div class="wheel-container">
+        
+        <!-- Center Big Display Box (Shows active full-size GIF) -->
+        <div class="center-display-box">
+          <img id="mainDisplay" src="emotion01.gif" alt="Center Emote GIF" onerror="handleMainError(this)">
+        </div>
+
+        <!-- 8 Pure GIF Square Slots (Files emotion01.gif through emotion08.gif) -->
+        
+        <!-- Slot 1 (Top Center) - Active default -->
+        <button class="emote-slot slot-1 active" data-index="1" onclick="selectSlot(this)">
+          <img src="emotion01.gif" alt="Slot 1" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>01.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 2 (Top Right) -->
+        <button class="emote-slot slot-2" data-index="2" onclick="selectSlot(this)">
+          <img src="emotion02.gif" alt="Slot 2" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>02.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 3 (Right Center) -->
+        <button class="emote-slot slot-3" data-index="3" onclick="selectSlot(this)">
+          <img src="emotion03.gif" alt="Slot 3" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>03.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 4 (Bottom Right) -->
+        <button class="emote-slot slot-4" data-index="4" onclick="selectSlot(this)">
+          <img src="emotion04.gif" alt="Slot 4" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>04.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 5 (Bottom Center) -->
+        <button class="emote-slot slot-5" data-index="5" onclick="selectSlot(this)">
+          <img src="emotion05.gif" alt="Slot 5" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>05.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 6 (Bottom Left) -->
+        <button class="emote-slot slot-6" data-index="6" onclick="selectSlot(this)">
+          <img src="emotion06.gif" alt="Slot 6" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>06.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 7 (Left Center) -->
+        <button class="emote-slot slot-7" data-index="7" onclick="selectSlot(this)">
+          <img src="emotion07.gif" alt="Slot 7" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>07.gif</text></svg>';">
+        </button>
+
+        <!-- Slot 8 (Top Left) -->
+        <button class="emote-slot slot-8" data-index="8" onclick="selectSlot(this)">
+          <img src="emotion08.gif" alt="Slot 8" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'105\' height=\'105\' viewBox=\'0 0 105 105\'><rect width=\'105\' height=\'105\' fill=\'%23FFF\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'14\' fill=\'%23111\'>08.gif</text></svg>';">
+        </button>
+
+      </div>
+    </section>
+
+    <!-- 
+      ==========================================================================
+      SECTION 3: INFO GRID (PROJECT STATEMENT & FILE SPECIFICATIONS)
+      --------------------------------------------------------------------------
+      Two bordered panels matching plan.jpg.
+      ==========================================================================
+    -->
+    <main class="info-grid">
+      
+      <!-- Left Panel: Project Statement -->
+      <div class="info-box">
+        <div>
+          <div class="box-header">
+            <span class="slash">//</span> 01. PROJECT STATEMENT
+          </div>
+          <!-- EDIT HERE: STUDENT PROJECT STATEMENT PARAGRAPH -->
+          <p class="statement-text">
+            This project explores eight core emotional states translated into seamless 200×200 pixel animated GIF loops. Each emote emphasizes silhouette clarity, rhythm, and expressive movement designed specifically for radial menu navigation.
+          </p>
+        </div>
+        <div>
+          <hr class="box-divider">
+          <div class="box-footer-text">
+            STATUS: ACTIVE SUBMISSION
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: File Specifications & Local Preview Uploader -->
+      <div class="info-box">
+        <div>
+          <div class="box-header">
+            <span class="slash">//</span> 02. FILE SPECIFICATIONS
+          </div>
+          <table class="specs-table">
+            <tr>
+              <td class="label">Resolution:</td>
+              <td class="value">200 × 200 px</td>
+            </tr>
+            <tr>
+              <td class="label">Aspect Ratio:</td>
+              <td class="value">1:1 Square</td>
+            </tr>
+            <tr>
+              <td class="label">Format:</td>
+              <td class="value">Animated GIF</td>
+            </tr>
+            <tr>
+              <td class="label">File Names:</td>
+              <td class="value">emotion01.gif – 08.gif</td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <hr class="box-divider">
+          <div class="box-footer-text">
+            Place all GIF files in the exact same folder as this <code>index.html</code> file.
+          </div>
+          <!-- Local File Tester Button -->
+          <div class="test-button-wrapper">
+            <label for="fileInput" class="file-input-btn">Test Local Files</label>
+            <input type="file" id="fileInput" multiple accept="image/gif,image/png,image/jpeg" onchange="loadLocalFiles(event)">
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- 
+    ==========================================================================
+    SECTION 4: FOOTER
+    --------------------------------------------------------------------------
+    ==========================================================================
+  -->
+  <footer>
+    EMOTE WHEEL TEMPLATE &bull; HTML/CSS/JS ARCHIVE
+  </footer>
+
+  <!-- 
+    ==========================================================================
+    SECTION 5: INTERACTION SCRIPT
+    --------------------------------------------------------------------------
+    - Handles slot selection and updates the central GIF display.
+    - Provides local file preview testing functionality.
+    ==========================================================================
+  -->
+  <script>
+    const mainDisplay = document.getElementById('mainDisplay');
+    const slots = document.querySelectorAll('.emote-slot');
+
+    // Select slot and update main display
+    function selectSlot(buttonElem) {
+      slots.forEach(btn => btn.classList.remove('active'));
+      buttonElem.classList.add('active');
+
+      const imgElem = buttonElem.querySelector('img');
+      if (imgElem && mainDisplay) {
+        mainDisplay.src = imgElem.src;
+      }
+    }
+
+    // Fallback if main image is not yet placed in directory
+    function handleMainError(img) {
+      img.onerror = null;
+      img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'><rect width='240' height='240' fill='%23FFFFFF'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='28' fill='%23111111'>01.gif</text></svg>";
+    }
+
+    // Attach mouseenter & click events to all slots
+    slots.forEach(slot => {
+      slot.addEventListener('mouseenter', () => selectSlot(slot));
+      slot.addEventListener('click', () => selectSlot(slot));
+    });
+
+    // Local file reader for testing before committing to GitHub
+    function loadLocalFiles(event) {
+      const files = Array.from(event.target.files);
+      if (!files.length) return;
+
+      files.forEach(file => {
+        const match = file.name.match(/emotion0?([1-8])\./i);
+        if (match) {
+          const slotNum = match[1];
+          const targetSlot = document.querySelector(`.slot-${slotNum}`);
+          if (targetSlot) {
+            const targetImg = targetSlot.querySelector('img');
+            const blobUrl = URL.createObjectURL(file);
+            if (targetImg) targetImg.src = blobUrl;
+            if (targetSlot.classList.contains('active')) {
+              mainDisplay.src = blobUrl;
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
